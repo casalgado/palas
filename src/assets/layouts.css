@@ -1,0 +1,30 @@
+section {
+  max-width: 1200px;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.span2 {
+  grid-column: span 2;
+}
+
+.span3 {
+  grid-column: span 3;
+}
+
+.span4 {
+  grid-column: span 4;
+}
+
+.rspan2 {
+  grid-row: span 2;
+}
+
+.rspan3 {
+  grid-row: span 3;
+}
+
+.rspan4 {
+  grid-row: span 4;
+}
