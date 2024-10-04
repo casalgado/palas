@@ -1,12 +1,6 @@
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-black: #323232;
-}
-
-/* semantic color variables for this project */
-/* options for color theme neutral EAEBE2, FFDBB4*/
-
-:root {
+  --color-white: #f2f2f2;
+  --color-black: #323232;
   /* color styles */
   --color-theme: #231f20;
   --color-theme-light: #343031;
@@ -16,15 +10,6 @@
   --color-complement: #c5aa94;
   --color-accent: #231f20;
   --color-gray: #ebebeb;
-
-  --color-border-neutral: #d9d9e2;
-
-  --color-admin-theme: #ff9805;
-  --color-admin-focus: #d37b00;
-  --color-admin-light: #ffaf3e;
-
-  --color-text-light: var(--vt-c-white);
-  --color-text-dark: var(--vt-c-black);
 
   /* border styles */
   --border-radius: 15px;
@@ -45,11 +30,6 @@
   --button-warning: #59ad6a;
   --button-warning-hover: #338e47;
   --button-inactive: rgb(137, 137, 137);
-
-  /* modal styles */
-  --modal-width-lg: 900px;
-  --modal-width-lg-half: calc(var(--modal-width-lg) / 2);
-  --modal-height-lg: 450px;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -91,29 +71,4 @@ li {
 
 strong {
   font-weight: bold;
-}
-
-.card {
-  background-color: var(--vt-c-white);
-  box-shadow: var(--shadow-1);
-  border-radius: var(--border-radius);
-  margin-bottom: 15px;
-  padding-bottom: 5px;
-  padding-top: 5px;
-}
-
-.primary-button {
-  border: 1px solid var(--color-admin-light);
-  border-radius: 3px;
-  background-color: var(--color-admin-theme);
-  color: var(--color-neutral);
-  cursor: pointer;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  font-size: 1em;
-  font-weight: 400;
-}
-
-.primary-button:hover {
-  background-color: var(--color-admin-focus);
 }
