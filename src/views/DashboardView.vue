@@ -1,47 +1,101 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import { test_data } from "../lib/external_data";
+import { ref } from "vue";
+import axios from "axios";
 
-// Create refs to store data, loading, and error states
-const data = ref(null);
-const loading = ref(true);
+const apiKey = ref("");
+const prompt = ref("");
+const generatedText = ref("");
+const loading = ref(false);
 const error = ref(null);
 
-onMounted(() => {
-  test_data
-    .then((result) => {
-      data.value = result;
-    })
-    .catch((err) => {
-      error.value = "Failed to load data";
-    })
-    .finally(() => {
-      loading.value = false;
-    });
-});
+const generateText = async () => {
+  loading.value = true;
+  error.value = null;
+
+  try {
+    const response = await axios.post(
+      "/api/v1/chat/completions", // Updated URL to use the proxy
+      {
+        model: "claude-3-sonnet-20240229",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt.value }],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey.value,
+          "anthropic-version": "2023-06-01",
+        },
+      }
+    );
+
+    generatedText.value = response.data.choices[0].message.content;
+  } catch (err) {
+    error.value = err.response ? err.response.data.error : err.message;
+  } finally {
+    loading.value = false;
+  }
+};
 </script>
 
 <template>
-  <section>
-    <div class="data-container">
-      <div v-if="loading">Loading...</div>
-      <div v-else-if="error">{{ error }}</div>
-      <div v-else>
-        <pre>{{ data }}</pre>
-        <!-- Displaying data as JSON for demo purposes -->
-      </div>
+  <div>
+    <h2>Anthropic API Text Generation</h2>
+    <div>
+      <label for="api-key">API Key:</label>
+      <input
+        id="api-key"
+        v-model="apiKey"
+        type="password"
+        placeholder="Enter your Anthropic API key"
+      />
     </div>
-  </section>
+    <div>
+      <label for="prompt">Prompt:</label>
+      <textarea
+        id="prompt"
+        v-model="prompt"
+        placeholder="Enter your prompt here"
+      ></textarea>
+    </div>
+    <button @click="generateText" :disabled="loading || !apiKey || !prompt">
+      Generate Text
+    </button>
+
+    <div v-if="loading">Generating...</div>
+    <div v-if="error" class="error">Error: {{ error }}</div>
+    <div v-if="generatedText">
+      <h3>Generated Text:</h3>
+      <p>{{ generatedText }}</p>
+    </div>
+  </div>
 </template>
 
-<style lang="scss" scoped>
-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; /* Full viewport height */
+<style scoped>
+div {
+  margin-bottom: 1rem;
 }
-
-.data-container {
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+input,
+textarea {
+  width: 100%;
+  padding: 0.5rem;
+}
+button {
+  padding: 0.5rem 1rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.error {
+  color: red;
 }
 </style>
