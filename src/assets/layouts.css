@@ -8,8 +8,11 @@
 
 header,
 footer {
-  height: 20px;
   background-color: var(--color-theme);
+}
+
+footer {
+  height: 20px;
 }
 
 section {

@@ -11,6 +11,12 @@
   --color-accent: #231f20;
   --color-gray: #ebebeb;
 
+  --primary-blue: #3498db;
+  --dark-blue: #2980b9;
+  --light-blue: #85c1e9;
+  --background-blue: #ecf0f1;
+  --text-color: #2c3e50;
+
   /* border styles */
   --border-radius: 15px;
 
