@@ -1,28 +1,27 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import OpenAI from "openai"; // Import OpenAI SDK
+import Anthropic from "@anthropic-ai/sdk";
 
-// Initialize OpenAI client
-const apiKey = ref(import.meta.env.VITE_OPENAI_KEY);
-const openai = ref(null); // Store OpenAI client instance
+const apiKey = ref(import.meta.env.VITE_ANTHROPIC_KEY);
 const prompt = ref("");
 const generatedText = ref("");
 const loading = ref(false);
 const error = ref(null);
 
+let anthropic;
+
 onMounted(() => {
-  // Initialize OpenAI client when component mounts
-  openai.value = new OpenAI({
-    organization: "org-JloLkZLNPcrgaRdmDGUWoR6x",
+  // Initialize Anthropic client when component mounts
+  anthropic = new Anthropic({
     apiKey: apiKey.value,
-    project: "proj_nwnwBpNqGzo4Uo1AjqsTf5zz", // Replace with your project ID
-    dangerouslyAllowBrowser: true, // Allow browser usage
+    dangerouslyAllowBrowser: true,
   });
 });
 
 const generateText = async () => {
-  if (!openai.value) {
-    error.value = "OpenAI client not initialized. Please enter your API key.";
+  if (!anthropic) {
+    error.value =
+      "Anthropic client not initialized. Please enter your API key.";
     return;
   }
 
@@ -30,15 +29,15 @@ const generateText = async () => {
   error.value = null;
 
   try {
-    const response = await openai.value.chat.completions.create({
-      model: "gpt-4o-mini", // Specify the model
-      messages: [{ role: "user", content: prompt.value }],
+    const response = await anthropic.messages.create({
+      model: "claude-3-sonnet-20240229",
       max_tokens: 1024,
+      messages: [{ role: "user", content: prompt.value }],
     });
 
-    generatedText.value = response.choices[0].message.content; // Get the generated text
+    generatedText.value = response.content[0].text;
   } catch (err) {
-    error.value = err.message || "An error occurred during the API request.";
+    error.value = err.message || "An error occurred";
     console.error("Full error:", err);
   } finally {
     loading.value = false;
@@ -46,25 +45,22 @@ const generateText = async () => {
 };
 
 const updateApiKey = () => {
-  // Dynamically update the OpenAI client with a new API key if needed
-  openai.value = new OpenAI({
-    organization: "org-JloLkZLNPcrgaRdmDGUWoR6x",
+  anthropic = new Anthropic({
     apiKey: apiKey.value,
-    project: "$PROJECT_ID", // Replace with your project ID
   });
 };
 </script>
 
 <template>
   <div>
-    <h2>OpenAI SDK Text Generation</h2>
-    <div style="display: none">
+    <h2>Anthropic SDK Text Generation</h2>
+    <div>
       <label for="api-key">API Key:</label>
       <input
         id="api-key"
         v-model="apiKey"
         type="password"
-        placeholder="Enter your OpenAI API key"
+        placeholder="Enter your Anthropic API key"
         @input="updateApiKey"
       />
     </div>
